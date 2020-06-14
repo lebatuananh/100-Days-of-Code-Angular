@@ -22,10 +22,10 @@ Sau khi cài đặt thành công các bạn có thể verify lại bằng cách 
 
 ### ANGULAR CLI
 Để phát triển một dự án Angular, chúng ta sẽ sử dụng đến công cụ chính thức từ team Angular đó là Angular CLI, (nó là một tool chạy các lệnh từ Terminal), và chúng ta sẽ cài đặt thông qua NPM bằng câu lệnh sau:
-- npm install -g @angular/cli@latest
+- `npm install -g @angular/cli@latest`
   
 Sau khi cài đặt thành công các bạn có thể verify bằng lệnh:
-- ng version
+- `ng version`
   
 Ở thời điểm hiện tại Angular CLI đang là version 9.
 Lưu ý:
