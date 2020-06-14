@@ -130,6 +130,7 @@ Trong ngày thứ 3 này, chúng ta chỉ cần nắm được có các loại d
 
 Từ bây giờ các bạn có thể hoàn toàn tạo được một cái profile card theo phong cách của mình bằng Angular rồi.
 https://www.w3schools.com/howto/howto_css_profile_card.asp
+
 Link document các bạn cần tìm hiểu trong Day 3
 https://angular.io/guide/architecture-components#data-binding
 
