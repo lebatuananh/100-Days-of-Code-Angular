@@ -129,8 +129,8 @@ Trong một buổi khác chúng ta sẽ tìm hiểu về Two-way binding và Cus
 Trong ngày thứ 3 này, chúng ta chỉ cần nắm được có các loại data binding nào trong Angular, làm thế nào để sử dụng chúng là được.
 
 Từ bây giờ các bạn có thể hoàn toàn tạo được một cái profile card theo phong cách của mình bằng Angular rồi.
-https://www.w3schools.com/howto/howto_css_profile_card.asp
+- https://www.w3schools.com/howto/howto_css_profile_card.asp
 
 Link document các bạn cần tìm hiểu trong Day 3
-https://angular.io/guide/architecture-components#data-binding
+- https://angular.io/guide/architecture-components#data-binding
 
