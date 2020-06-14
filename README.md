@@ -1,136 +1,81 @@
-# 100 Days of Code Angular Day 3
+# 100 Days of Code Angular Day 4
 
-## ANGULAR DATA BINDING
+## ANGULAR STRUCTURE DIRECTIVE
 
-So, what is data binding? Hãy thử tưởng tượng rằng công ty X có anh nhân viên A, anh này có vợ là chị B, bằng một cách nào đó cứ đến kỳ chuyển lương thì chị B sẽ nhận được thông báo về điện thoại của mình rằng số tiền trong tài khoản của anh A đã được công ty X trả Y triệu. Tương tự như thế trong lập trình khi chúng ta có data D thuộc object O sẽ được ràng buộc với data G thuộc object OP, bằng một cách nào đó, mỗi khi data D thay đổi thì G cũng sẽ biết sự thay đổi và thay đổi theo. Đó là một dạng của data binding.
+Theo như một lẽ tự nhiên trong lập trình, có những lúc chúng ta cần phụ thuộc vào điều kiện gì đó để đưa ra quyết định tương ứng. Giả sử chúng ta đang xây dựng ứng dụng xem video trực tuyển, lúc này có những bộ phim PG-13 yêu cầu người xem phải từ 13 tuổi trở lên mới xem được. Làm thế nào để hiển thị cho người dùng biết được họ có đủ điều kiện để xem video đó hay không? Lúc này chúng ta có thể dùng cấu trúc **IF-ELSE** mà Angular cung cấp để đáp ứng yêu cầu đó.
 
-Trong Angular chúng ta đã được Angular làm nhiệm vụ đồng bộ những dữ liệu bị ràng buộc lại với nhau, chúng ta chỉ cần update data/state cần thiết.
+``` none
+Trong Angular để thêm, xóa, thay đổi structure (structure HTML chẳng hạn) ở trên view của component
+chúng ta sẽ dùng Structure Directive.
+```
 
-Vậy có những dạng data binding nào?
+## CẤU TRÚC IF-ELSE
 
-## INTERPOLATION
-
-Bây giờ hãy nhớ lại, một component trong Angular chỉ là một TypeScript (TS) class thông thường, và nó đi kèm với một decorator để găn thêm meta-data như template mà nó định nghĩa là gì. Như vậy, TS class và template này hoàn toàn không biết đến nhau, mà nó sẽ được Angular xử lý để gắn chúng lại. Câu hỏi đặt ra là làm thế nào để tôi hiển thị một dữ liệu nào đó (tên, tuổi, ngày tháng năm sinh, một string, number bất kỳ, hay bất kỳ thứ gì (object) có thể hiển thị được? Đây chính là nơi tỏa sáng của cặp đôi hoàn cảnh (mà chúng ta gọi là interpolation) `{{ expression }}`.
-
-Nó có thể hiểu là hãy tính toán cái expression này, nếu có trả về cái gì thì phun (display) nó ra ngay vị trí chỗ dấu `{{}}` này cho tôi.
-
-Chỉ đơn giản thế. Giờ các bạn có thể phun data về tên tuổi của một người thành cái profile đơn giản như sau:
+Để hiển thị một phần view (template) theo một điều kiện, chúng ta sẽ gắn thêm một property đặc biệt vào một tag, với cú pháp có chứa dấu  * (asterisk) như sau *ngIf="expression":
 
 ``` typescript
-import { Component } from '@angular/core';
 @Component({
 selector: 'app-hello',
 template: `
 <h2>Hello there!</h2>
 <h3>Your name: {{ user.name }}</h3>
 <p>Your name: {{ user.age }}</p>
+<div *ngIf="user.age >= 13">
+Bạn có thể xem nội dung PG-13
+</div>
 `
 })
 export class HelloComponent {
 user= {
 name: 'Le Ba Tuan Anh',
-age: 24
+age: 30
 };
 }
 ```
 
-## PROPERTY BINDING
+Chỉ cần có thế là chúng ta có thể hiển thị view tùy thuộc vào dữ liệu mà expression trả về. Truthy thì hiển thị, Falsy thì không hiển thị.
 
-Một số tag khi sử dụng bạn cần phải truyền vào data cho một property nào đó. Đối với DOM chúng ta có 2 khái niệm khác nhau là property và attribute. À mà khoan DOM là gì? Khi browser load trang web của bạn, nó sẽ parse phần HTML và xây dựng nên một cây Document Object Model (DOM) từ đó để biểu diễn tương ứng những gì HTML đang được dựng, cho phép chúng ta có thể tương tác với phần HTML như đọc, sửa HTML bằng JavaScript.
+Với những directive được cung cấp sẵn (built-in) bởi Angular, giờ đây HTML template của component sẽ rất flexible.
 
-Giả sử khi bạn có phần HTML:
-
-```html
-<input type=”text” value=”something”>
-```
-
-Sau khi parse xong sẽ có một object (node) thuộc type HTMLInputElement được tạo ra. Ở đây `type=”text”` hay `value=”something”` là các HTML attribute. Mỗi tag HTML có thể có nhiều attribute khác nữa (xin mời bạn Search Google). Object được tạo tương ứng sẽ có dạng
-
-``` typescript
-obj = {
-type: ‘text’,
-value: ‘something’,
-attributes: [] // thuộc type NamedNodeMap, dạng như một array
-// … các thuộc tính, method khác
-}
-```
-
-Như bạn có thể thấy attribute được để chỉ những gì các bạn đặt vào phần opening tag của một tag sẽ là attributes, còn những gì là property của object (node) sẽ được gọi là property.
-
-Các attributes sẽ được lưu trữ vào property attributes của node tương ứng.
-
-Có những attribute sẽ được map sang thành property tương ứng, ví dụ như type và value ở trên, nhưng có những attribute không được map sang ví dụ class sẽ thành className, chúng không có quan hệ 1-1 với nhau.
-
-Thực tế khi sử dụng Angular, chúng ta sẽ muốn ứng dụng trở nên linh động hơn (ví dụ: cùng là 1 template nhưng có thể thay đổi data để hiển thị). Lúc này chúng ta cần update các properties của DOM để làm cho nó đáp ứng chẳng hạn. Nhưng nếu cần phải dùng document.querySelector/jQuery để manipulate DOM thì Angular quá vô vị. Phải có cách gì đó hay ho hơn chứ nhỉ?
-
-Đó chính là đất diễn của property binding. Chúng ta chỉ cần sử dụng một cú pháp để báo cho Angular biết chúng ta cần binding một property như sau ở template.
+Vậy nếu chúng ta muốn dùng **IF-ELSE** thì thế nào. Có thể các bạn sẽ nghĩ ngay đến phủ định mệnh đề IF là được ELSE thôi. Điều này hoàn toàn được.
 
 ``` html
-<input type="text" [value]="user.name" >
+<div *ngIf="user.age >= 13">
+Bạn có thể xem nội dung PG-13
+</div>
+<div *ngIf="user.age < 13">
+Bạn không thể xem nội dung PG-13
+</div>
 ```
 
-Trong dự án Angular, bạn hoàn toàn có thể hiểu `type="text"` lúc này cũng là một property binding, thay vì `[type]="'text'"` (để ý có 1 cặp nháy đơn và 1 cặp nhảy đôi), nó đang biểu diễn binding cho một hằng giá trị (literal), lúc này bạn hoàn toàn có thể bỏ qua mấy dấu vuông vuông kia đi. Nhưng trong hầu hết các trường hợp còn lại, bạn sẽ dùng dấu vuông vuông `[property]="expression"` để thực hiện khai báo property binding.
-
-Trong ví dụ ở trên chúng ta đã binding từ TS class ra ngoài template, và khi dữ liệu ở class thay đổi, Angular sẽ tự động làm nhiệm vụ update template để hiển thị tương ứng sự thay đổi đó cho chúng ta.
-
-``` none
-Lưu ý: ngoài property binding cho các phần tử HTML, chúng ta cũng có thể áp dụng property binding cho
-các component.
-```
-
-## EVENT BINDING
-JavaScript sử dụng rất nhiều đến khái niệm event. Khi một điều gì đó xảy ra, chúng ta muốn thực hiện một số task nào đó. Ví dụ, khi người dùng click vào button, tôi muốn hiển thị alert cho người dùng nhìn thấy.
-
-Angular có cách nào chính thống cho việc này không đây, hay chúng ta sẽ dùng addEventListener như thường?
-
-Câu trả lời chính là Event binding. Để gắn event listener vào một phần tử nào đó ở trên template, chúng ta có thể sử dụng cú pháp ngoặc tròn tròn như sau:
-
-``` typescript
-@Component({
-selector: 'app-hello',
-template: `
-<h2>Hello there!</h2>
-<button (click)="showInfo()">Click me!</button>
-`
-})
-export class HelloComponent {
-showInfo() {
-alert('Inside Angular Component method');
-}
-}
-```
-
-Chỉ là lúc này chúng ta sẽ trỏ đến method bên trong Component. Khá là giống như chúng ta sử dụng inline event listener đó.
-
-```html
-<button onclick="showInfo()">Click me!</button>
-```
-
-## TWO-WAY BINDING
-
-Trong thực tế two-way binding chính là kết hợp của binding dữ liệu từ class ra template thông qua property binding, và từ template vào class thông qua event binding.
-
-Nó chứa cú pháp ngắn gọn dạng vuông vuông tròn tròn như sau:
+Hoặc chúng ta có cách hay ho khác, đó là dùng đến **ng-template**. Tag ng-template là một tag được cung cấp bởi Angular, nó sẽ lưu trữ một Template được định nghĩa bên trong cặp thẻ mở/đóng của nó. Những gì được định nghĩa bên trong đó sẽ không được hiển thị ra view, nhưng chúng ta có thể sử dụng Template đó để render bằng code. Đoạn code phía trên có thể được chuyển đổi tương đương:
 
 ``` html
-<input type="text" [(ngModel)]="user.name" >
+<div *ngIf="user.age >= 13; else noPG13">
+Bạn có thể xem nội dung PG-13
+</div>
+<ng-template #noPG13>
+<div>
+Bạn không thể xem nội dung PG-13
+</div>
+</ng-template>
 ```
 
-Để sử dụng ngModel bạn cần imports FormsModule, nhưng trong bài này chúng ta chỉ cần hiểu, nó là cách viết tắt của dạng tương ứng là:
+## NG-TEMPLATE
+
+Với cú pháp sử dụng dấu * ở trên, có thể các bạn sẽ thấy nó khác lạ, nhưng thực tế, nó được gọi là Syntactic sugar (giúp nhìn code dễ hiểu, dễ đọc hơn chẳng hạn) được chuyển đổi sang dạng property binding như sau:
 
 ``` html
-<input type="text" [ngModel]="user.name" (ngModelChange)="user.name = $event">
+<ng-template [ngIf]="user.age >= 13" [ngIfElse]="noPG13">
+<div>
+Bạn có thể xem nội dung PG-13
+</div>
+</ng-template>
 ```
-
-Trong một buổi khác chúng ta sẽ tìm hiểu về Two-way binding và Custom Two-way binding sau.
 
 ## SUMMARY
 
-Trong ngày thứ 3 này, chúng ta chỉ cần nắm được có các loại data binding nào trong Angular, làm thế nào để sử dụng chúng là được.
-
-Từ bây giờ các bạn có thể hoàn toàn tạo được một cái profile card theo phong cách của mình bằng Angular rồi.
-- https://www.w3schools.com/howto/howto_css_profile_card.asp
-
-Link document các bạn cần tìm hiểu trong Day 3
-- https://angular.io/guide/architecture-components#data-binding
-
+Trong ngày thứ 4, chúng ta cần hiểu cách dùng cấu trúc ngIf-else, ngoài các cách sử dụng ở trên Angular còn cung cấp cách dùng ngIf-then-else nữa, các bạn có thể tìm hiểu thêm tại link tham khảo phía dưới.
+Link document các bạn cần tìm hiểu trong Day 4
+- https://angular.io/guide/structural-directives
+- https://angular.io/api/common/NgIf
