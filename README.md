@@ -1,81 +1,124 @@
-# 100 Days of Code Angular Day 4
+# 100 Days of Code Angular Day 5
 
-## ANGULAR STRUCTURE DIRECTIVE
+## ANGULAR STRUCTURE DIRECTIVE NGFOROF
 
-Theo như một lẽ tự nhiên trong lập trình, có những lúc chúng ta cần phụ thuộc vào điều kiện gì đó để đưa ra quyết định tương ứng. Giả sử chúng ta đang xây dựng ứng dụng xem video trực tuyển, lúc này có những bộ phim PG-13 yêu cầu người xem phải từ 13 tuổi trở lên mới xem được. Làm thế nào để hiển thị cho người dùng biết được họ có đủ điều kiện để xem video đó hay không? Lúc này chúng ta có thể dùng cấu trúc **IF-ELSE** mà Angular cung cấp để đáp ứng yêu cầu đó.
+Sẽ ra sao nếu trong ứng dụng bạn cần phải hiển thị một danh sách các phần tử ra ngoài template? Nếu danh sách đó chúng ta có được là một array thì có cách nào thực hiện vòng lặp ở template không? Nếu chúng ta cần sử dụng for loop như trong code TypeScript thì sao?
 
-``` none
-Trong Angular để thêm, xóa, thay đổi structure (structure HTML chẳng hạn) ở trên view của component
-chúng ta sẽ dùng Structure Directive.
-```
+Câu trả lời cho những câu hỏi trên chính là **NgForOf** trong Angular. (Một số bạn có thể gọi nó là NgFor).
 
-## CẤU TRÚC IF-ELSE
+**NgForOf** có cách dùng như thế nào, có dùng giống cú pháp của NgIf hôm trước không?
 
-Để hiển thị một phần view (template) theo một điều kiện, chúng ta sẽ gắn thêm một property đặc biệt vào một tag, với cú pháp có chứa dấu  * (asterisk) như sau *ngIf="expression":
+Giả sử chúng ta có một danh sách các tác giả của các cuốn sách trong một ứng dụng bán sách/thư viện có cấu trúc như sau:
 
 ``` typescript
-@Component({
-selector: 'app-hello',
-template: `
-<h2>Hello there!</h2>
-<h3>Your name: {{ user.name }}</h3>
-<p>Your name: {{ user.age }}</p>
-<div *ngIf="user.age >= 13">
-Bạn có thể xem nội dung PG-13
+authors = [{
+id: 1,
+firstName: 'Flora',
+lastName: 'Twell',
+email: 'ftwell0@phoca.cz',
+gender: 'Female',
+ipAddress: '99.180.237.33'
+}, {
+id: 2,
+firstName: 'Priscella',
+lastName: 'Signe',
+email: 'psigne1@berkeley.edu',
+gender: 'Female',
+ipAddress: '183.243.228.65'
+},
+// more data
+]
+```
+
+Dưới đây là ví dụ về cách sử dụng **NgForOf**:
+
+```typescript
+<div *ngFor="let author of authors">
+{{author.id}} - {{author.firstName}} {{author.lastName}}
 </div>
-`
-})
-export class HelloComponent {
-user= {
-name: 'Le Ba Tuan Anh',
-age: 30
-};
+```
+
+Cấu trúc sử dụng này khá giống *for (let author of authors)* trong TypeScript đúng không.
+
+## MỘT SỐ LOCAL VARIABLE TRONG MỘT NGFOROF TEMPLATE
+
+Khi sử dụng **NgForOf**, ở mỗi vòng lặp chúng ta sẽ có thể truy xuất đến một số local variable như:
+
+- `$implicit`: T: Giá trị của phần tử trong danh sách ở lần lặp hiện tại
+- `index`: number: index của lần lặp hiện tại.
+- `count`: number: số lượng phần tử trong danh sách.
+- `first`: boolean: True nếu đây là phần tử đầu tiên trong danh sách.
+- `last`: boolean: True nếu đây là phần tử cuối cùng trong danh sách.
+- `even`: boolean: True nếu đây là phần tử ở index chẵn.
+- `odd`: boolean: True nếu đây là phần tử ở index lẻ.
+  
+Để truy xuất được những biến trên chúng ta chỉ cần gọi chúng như sau:
+
+- Đối với `$implicit` nó sẽ được gắn cho biến mà chính chúng ta khi khai báo *let something of xxx*, lúc này `something = $implicit`.
+- Đối với các biến khác, chúng ta chỉ cần dùng cú pháp sau:
+  
+```typescript
+<div *ngFor="let author of authors; index as idx; count as total">
+({{idx}})/({{total}}): {{author.id}} - {{author.firstName}} {{author.lastName}}
+</div>
+```
+Lúc này biến idx = index, và total = count. Tương tự đối với các biến còn lại.
+
+## CẤU TRÚC NGFOROF VÀ NG-TEMPLATE
+Với cấu trúc dùng dấu sao (*) như trên chúng ta có thể chuyển đổi tương ứng về dạng ng-template và property binding như sau:
+
+``` html
+<ng-template ngFor [ngForOf]="authors" let-author let-idx="index" let-total="count">
+<div>
+({{idx}})/({{total}}): {{author.id}} - {{author.firstName}} {{author.lastName}}
+</div>
+</ng-template>
+```
+
+## SỬ DỤNG NHIỀU STRUCUTRE DIRECTIVE TRÊN CÙNG MỘT PHẦN TỬ
+
+Trong nhiều trường hợp, bạn có thể cần kiểm tra một dữ liệu nào đó trong vòng lặp, nếu bạn đặt **NgIf** và **NgForOf** trên cùng một phần tử thì nó sẽ không work. Liệu có cách nào khác không?
+
+Câu trả lời đó là bạn không thể đặt nhiều hơn một structure directive lên một phần tử được. Hãy thử xem ví dụ sau:
+
+``` typescript
+for (let item of list) {
+if(somethingGood) {
+// more code
+}
 }
 ```
 
-Chỉ cần có thế là chúng ta có thể hiển thị view tùy thuộc vào dữ liệu mà expression trả về. Truthy thì hiển thị, Falsy thì không hiển thị.
-
-Với những directive được cung cấp sẵn (built-in) bởi Angular, giờ đây HTML template của component sẽ rất flexible.
-
-Vậy nếu chúng ta muốn dùng **IF-ELSE** thì thế nào. Có thể các bạn sẽ nghĩ ngay đến phủ định mệnh đề IF là được ELSE thôi. Điều này hoàn toàn được.
+Rõ ràng là chúng ta không đặt for và if vào cùng một hàng được. Vậy nên giải pháp lúc này là tách chúng ra, và sử dụng một tầng wrapper nữa. Ví dụ:
 
 ``` html
-<div *ngIf="user.age >= 13">
-Bạn có thể xem nội dung PG-13
+<div *ngFor=”let item of list”>
+<div *ngIf=”somethingGoood”>
+More code
 </div>
-<div *ngIf="user.age < 13">
-Bạn không thể xem nội dung PG-13
 </div>
 ```
 
-Hoặc chúng ta có cách hay ho khác, đó là dùng đến **ng-template**. Tag ng-template là một tag được cung cấp bởi Angular, nó sẽ lưu trữ một Template được định nghĩa bên trong cặp thẻ mở/đóng của nó. Những gì được định nghĩa bên trong đó sẽ không được hiển thị ra view, nhưng chúng ta có thể sử dụng Template đó để render bằng code. Đoạn code phía trên có thể được chuyển đổi tương đương:
+Giả sử nếu bạn không được phép hoặc không muốn sinh ra một div thừa thì sao? Chúng ta có thể convert **NgIf** về dạng **ng-template** như buổi trước hoặc dùng **ng-container** để dùng:
 
 ``` html
-<div *ngIf="user.age >= 13; else noPG13">
-Bạn có thể xem nội dung PG-13
+<div *ngFor=”let item of list”>
+<ng-container *ngIf=”somethingGoood”>
+More code
+</ng-container >
 </div>
-<ng-template #noPG13>
-<div>
-Bạn không thể xem nội dung PG-13
+<div *ngFor=”let item of list”>
+<ng-template [ngIf]=”somethingGoood”>
+More code
+</ng-template >
 </div>
-</ng-template>
-```
-
-## NG-TEMPLATE
-
-Với cú pháp sử dụng dấu * ở trên, có thể các bạn sẽ thấy nó khác lạ, nhưng thực tế, nó được gọi là Syntactic sugar (giúp nhìn code dễ hiểu, dễ đọc hơn chẳng hạn) được chuyển đổi sang dạng property binding như sau:
-
-``` html
-<ng-template [ngIf]="user.age >= 13" [ngIfElse]="noPG13">
-<div>
-Bạn có thể xem nội dung PG-13
-</div>
-</ng-template>
 ```
 
 ## SUMMARY
-
-Trong ngày thứ 4, chúng ta cần hiểu cách dùng cấu trúc ngIf-else, ngoài các cách sử dụng ở trên Angular còn cung cấp cách dùng ngIf-then-else nữa, các bạn có thể tìm hiểu thêm tại link tham khảo phía dưới.
-Link document các bạn cần tìm hiểu trong Day 4
+Trong ngày thứ 5, chúng ta cần hiểu cách dùng cấu trúc **NgForOf** và một số lưu ý khi sử dụng các local variable. Thêm nữa chúng ta cũng cần tìm hiểu cách để sử dụng các cấu trúc lồng nhau với nhiều Structure directive
+Link document các bạn cần tìm hiểu trong Day 5
 - https://angular.io/guide/structural-directives
-- https://angular.io/api/common/NgIf
+- https://angular.io/api/common/NgForOf
+- https://www.tiepphan.com/thu-nghiem-voi-angular-2-built-in-directives-ngif-ngfor-ngswitchcase/
+- https://www.tiepphan.com/thu-nghiem-voi-angular-2-ngfor-index-first-last-even-odd-trackby/
+- https://www.youtube.com/watch?v=dXDC-4KGIGI
