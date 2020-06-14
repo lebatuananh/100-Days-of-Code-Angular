@@ -1,65 +1,97 @@
-# 100 Days of Code Angular
+# 100 Days of Code Angular Day 2
 
-## GIỚI THIỆU
+## EXPLORE ANGULAR APP
 
-Trong vài năm trở lại đây, Angular đã có nhiều cải tiến mới, cả về feature và performance. Càng ngày càng có nhiều công ty/tổ chức, dự án sử dụng Angular để phát triển các sản phẩm giàu tính tương tác. Mình nhận thấy đây là thời điểm thích hợp để khởi động một series để các bạn có động lực học code Angular, do đó series 100 Days of Code Angular đã ra đời.
+Từ project được generate bởi Angular CLI chúng ta có thể thấy được trong đó có khá nhiều các file/folder, vậy application của chúng ta bắt đầu từ đâu.
 
-Mục tiêu của series là mang đến cơ hội để thử thách bản thân các bạn trong một quá trình liên tục, với mong muốn sau khi kết thúc 100 ngày thì các bạn có kiến thức nền tảng để phát triển dự án bằng Angular.
+Đầu tiên, từ folder src bạn có thể thấy được file index.html, bên trong tag body sẽ có một tag HTML khá khác lạ (app-root trong hầu hết trường hợp). Tag này không hề tồn tại trong HTML, ắt hẳn đây là một custom tag/selector của application, hay nói cách khác, đây là cái gì đó bao ngoài của một view nào đó trong ứng dụng.
 
-## CHUẨN BỊ
+Tiếp theo, bạn mở file **main.ts**, đây là nơi khởi đầu của application, bên trong là các đoạn code TypeScript (TS) thông thường, nó là một module (ES module/TS module), nó đã import một số thứ khác từ một số thư viện/module khác để sử dụng. Không có gì đặc biệt lắm trong file này, nó chỉ gọi đến một số hàm nào đó để thực thi việc bootstrap application.
+Và sau một vài chỉ dẫn bạn đã có thể tìm thấy file **app/app.module.ts**, đây là một file TypeScript module khác, bên trong có một class kèm theo cái móc móc gì đó NgModule (một TS decorator), đó chính là một NgModule ở trong một ứng dụng Angular. Đến đây có thể thấy đã bắt đầu confuse, gì mà TS module rồi lại còn NgModule. Thực ra bạn có thể hiểu đơn giản đó là TS module là cách mà chúng ta tổ chức code thành các phần nhỏ có thể là các file, các folder, mỗi một file TS sẽ đóng gói thành một module, nó có thể import module khác, hoặc export một số phần code trong nó cho module khác sử dụng. Còn NgModule là cách mà chúng ta tổ chức phần chức năng của một Angular application. Mỗi Angular app sẽ được chia thành nhiều NgModule, ít nhất đến thời điểm hiện tại thì app của chúng ta mới có một NgModule tên là AppModule (hay được gọi là root NgModule). Trong tương lai NgModule có thể không còn cần thiết cho ứng dụng nữa.
 
-Để chuẩn bị cho chặng đường phía trước, chúng ta cần một số thứ như sau:
-- IDE/Editor: các bạn có thể dùng những công cụ mà các bạn thấy quen thuộc, hoặc sử dụng một số công cụ như Visual Studio Code (VS Code), WebStorm để support code tốt hơn.
-- Nếu bạn sử dụng VS Code thì nên cài đặt thêm 1 số extension để support trong quá trình code như: Angular Language Service, EditorConfig for VS Code, ESLint/TSLint, Nx Console (optional).
+Ở trong AppModule, chúng ta đã thấy được một trong những thành phần quan trọng nhất của các ứng dụng Angular đó là các Component, ở đây là AppComponent, nó được import từ file **app.component.ts**.
 
-## TIẾN HÀNH
-### NODEJS
-Đầu tiên các bạn vào trang https://nodejs.org/en/download/ để tải về Nodejs và cài đặt vào máy. Các bạn có thể tải về bản Long Term Support (LTS) hoặc Current đều được. Hiện tại bản LTS mới nhất là version 12, với Angular version 9 thì đã hoàn toàn phù hợp rồi.
-Đối với các bạn nào quen thuộc với terminal thì mình khuyến cáo sử dụng NVM để cài đặt và quản lý nhiều phiên bản Nodejs trên cùng 1 máy. Như thế các bạn sẽ linh động khi làm việc với nhiều dự án khác nhau có đòi hỏi khác nhau về version của Nodejs.
-Sau khi cài đặt thành công các bạn có thể verify lại bằng cách mở Terminal/PowerShell/CMD (mình sẽ gọi chung là Terminal) và gõ các lệnh sau, nếu nó hiển thị ra được version thì đã cài đặt thành công.
-- `node -v`
-- `npm -v`
+Với mỗi một ứng dụng Angular, một component sẽ định nghĩa ra một view tương ứng. Hãy thử tưởng tượng bạn là một người kiến trúc lên các tòa nhà cao tầng, việc chúng ta ghép các Component (có sẵn hoặc phải tự tạo) để tạo ra tòa nhà đó cũng giống như việc chúng ta xây dựng các ứng dụng dựa trên Component (Angular, React đều dựa trên ý tưởng chia ứng dụng thành các component và integrate chúng lại với nhau). Ví dụ, trong ứng dụng của chúng ta có thể có các component như: Main Page, Header, Side Nav, Footer. Và bên trong mỗi component lại có thể là sự hợp thành của nhiều component khác nữa.
 
-### ANGULAR CLI
-Để phát triển một dự án Angular, chúng ta sẽ sử dụng đến công cụ chính thức từ team Angular đó là Angular CLI, (nó là một tool chạy các lệnh từ Terminal), và chúng ta sẽ cài đặt thông qua NPM bằng câu lệnh sau:
-- `npm install -g @angular/cli@latest`
-  
-Sau khi cài đặt thành công các bạn có thể verify bằng lệnh:
-- `ng version`
-  
-Ở thời điểm hiện tại Angular CLI đang là version 9.
-Lưu ý:
-- Một số bạn sử dụng Windows có thể phải cài đặt thêm Python hoặc windows-build-tools để có thể sử dụng SCSS ở trong project sắp tới.
-- Nếu các bạn không thể chạy `ng version` vì nó báo ` 'ng' is not recognized as an internal or external command.` thì các bạn cần phải thêm npm global vào PATH.
-- Một số bạn sử dụng PowerShell có thể bị báo ` File C:\Users\< username >\AppData\Roaming\npm\ng.ps1 cannot be loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.` thì các bạn cần phải enable policy để chạy được command. Để enable các bạn mở Powershell as Administrator và chạy lệnh này `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine` hoặc mở link ở thông báo lỗi để tìm hiểu thêm.
+Đối với AppComponent, đây là root component của ứng dụng, bạn có thể lại thấy một TS decorator khác nữa tên là Component, và bên dưới là một TS class thông thường.
+Ở trong ứng dụng Angular, TS decorator mà Angular cung cấp thông thường sẽ để gắn thêm meta-data cho class/property/method, đối với class AppComponent, decorator Component sẽ gắn thêm một số meta-data như selector, template (view của component, chính là chúng ta sẽ định nghĩa component sẽ hiển thị những gì), etc...
 
-## KHỞI TẠO DỰ ÁN
-Sau khi mọi thứ đã xong xuôi thì bạn có thể khởi tạo dự án được rồi. Bạn mở Terminal và chạy lệnh:
-- `ng new <tên-project>`
+View của một component có thể coi là phần HTML mở rộng, nó có nhiều tính năng hơn HTML thông thường. Ở trong view chúng ta có thể sẽ nhúng các component/directive khác.
+Vậy là đã rõ, tag app-root mà chúng ta nhìn thấy từ index.html sau một vòng tìm hiểu chúng ta sẽ tìm ra nó thuộc về AppComponent.
 
-Ví dụ:
-- `ng new angular100-d-o-c`
-  
-Lúc này các bạn sẽ cần trả lời 1 số câu hỏi về routing, style như sau:
-- `Would you like to add Angular routing?`
-- `Which stylesheet format would you like to use?`
+## KHỞI TẠO THÊM MỘT COMPONENT MỚI
 
-Cơ bản thì các bạn có thể để default cũng được, hoặc chọn tùy thích như (Y cho routing, SCSS cho style) như mình đang dùng cho các project thực tế thì hầu hết sẽ chọn như trên.
-Sau khi khởi tạo xong, chúng ta có thể mở dự án ở Editor quen thuộc (ví dụ: VS Code) để xem project đã được generate ra.
-Để khởi chạy dự án, chúng ta chạy lệnh sau ở trong directory của dự án.
-- `ng serve`
+Một Angular application sẽ được tạo từ nhiều component, nên chúng ta sẽ không để hết code vào AppComponent, bây giờ hãy làm thử một component khác xem sao.
+Chúng ta sẽ tạo mới file **hello.component.ts** cùng trong thư mục của **app.component.ts** và thực hiện coding.
 
-Mặc định dự án sẽ chạy ở port 4200, nếu bạn muốn đổi port thì chỉ cần thêm tham số
+```typescript
+export class HelloComponent {}
+```
 
-- `ng serve --port=other-port`
-  
-Ví dụ:
+Nó là một TS class rất đơn giản phải không, bây giờ chúng ta sẽ gắn meta-data cho nó như sau.
 
-- `ng serve --port=9000`
+```typescript
+import { Component } from '@angular/core';
+@Component({
+selector: 'app-hello',
+template: `
+<h2>Hello there!</h2>
+`
+})
+export class HelloComponent {}
+```
 
-Sau khi serve thành công các bạn có thể mở trình duyệt và navigate vào địa chỉ URL: http://localhost:4200/ ở đây các bạn sẽ thấy được thành quả của mình.
-Như vậy, chúng ta đã hoàn thành ngày đầu tiên tìm hiểu Angular. Hẹn gặp lại trong các ngày tiếp theo.
+Thế là đã xong một component đó, easy. Với selector trên nếu chúng ta sử dụng như AppComponent thì có được không.
 
-## Link tham khảo
-- https://angular.io/guide/setup-local
-- https://angular.io/tutorial/toh-pt0
+Bây giờ bạn mở file **app.component.html** lên và chèn thêm selector của HelloComponent vừa tạo xem sao.
+
+```typescript
+<app-hello></app-hello>
+```
+
+Save file và khởi chạy ứng dụng với lệnh `ng serve` như day 1 xem sao.
+
+Không được rồi, chúng ta đã gặp lỗi.
+
+```none
+error NG8001: 'app-hello' is not a known element:
+1. If 'app-hello' is an Angular component, then verify that it is part of this module.
+2. If 'app-hello' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+```
+
+Rõ ràng rồi, chúng ta nhìn thấy lỗi cũng đã gợi ý cho chúng ta cách fix. Chúng ta mới chỉ tạo ra component mà chưa declare nó sẽ thuộc NgModule nào cả, giống như khi bạn gia nhập một công ty mới, ngày đầu tiên bạn chưa biết mình thuộc ai quản lý, lúc này có thể bạn sẽ không thể vào văn phòng vì không ai biết bạn là ai cả. Vì vậy chúng ta cần làm các bước để khai sinh cho component vừa mới được sinh ra.
+
+Trong app hiện tại có NgModule duy nhất là AppModule, chúng ta sẽ thêm vào đó, nhưng vấn đề là thêm vào đâu?
+
+Khi bạn mở AppModule sẽ thấy AppComponent được đưa vào NgModule decorator, chắc là component mới kia cũng thế. Và một thoáng nhìn, chúng ta thấy cái keyword khá dễ mường tượng declarations, sau khi hover vào chúng ta sẽ thấy editor sẽ hiển thị một message:
+
+```none
+- The set of components, directives, and pipes (declarables) that belong to this module.
+- @usageNotes — The set of selectors that are available to a template include those declared here, and those that are exported from imported NgModules.
+- Declarables must belong to exactly one module. The compiler emits an error if you try to declare the same class in more than one module. Be careful not to declare a class that is imported from another module.
+```
+
+Yeah, chính là nó đó, giờ chỉ việc thêm HelloComponent vào đó là xong.
+
+```typescript
+declarations: [
+AppComponent,
+HelloComponent,
+],
+```
+
+App đã chạy thành công, bây giờ nhìn kỹ lại thì việc để tạo được một component cũng không quá khó. Ngoài ra, declarations array có thể dùng cho cả component, pipe, directive (chắc là cái concept gì đó nữa ở trong Angular).
+Ngoài cách tạo component bằng tay như trên, bạn có thể tạo bằng Angular CLI như sau:
+`ng generate component hello`
+
+Với cách tạo bằng tool thì bạn sẽ không cần phải làm những giai đoạn bằng tay lặp đi lặp lại nữa.
+
+That's all for today.
+
+Các bạn hãy thử tìm hiểu cấu trúc ứng dụng và tạo thêm nhiều component nữa nào.
+
+## SUMMARY
+
+- https://angular.io/guide/architecture
+- https://angular.io/guide/architecture-modules
+- https://angular.io/guide/architecture-components
