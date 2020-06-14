@@ -1,124 +1,77 @@
-# 100 Days of Code Angular Day 5
+# 100 Days of Code Angular Day 6
 
-## ANGULAR STRUCTURE DIRECTIVE NGFOROF
+## ATTRIBUTE DIRECTIVE
 
-Sẽ ra sao nếu trong ứng dụng bạn cần phải hiển thị một danh sách các phần tử ra ngoài template? Nếu danh sách đó chúng ta có được là một array thì có cách nào thực hiện vòng lặp ở template không? Nếu chúng ta cần sử dụng for loop như trong code TypeScript thì sao?
+**Attribute directive** là gì, nó có khác gì **Structure directive** mà chúng ta đã gặp qua như **NgIf**, **NgForOf** không?
+Đối với **Structure directive**, nó có thể thêm, xóa, thay đổi cấu trúc cây DOM. Còn một Attribute directive sẽ có thể thay đổi cách hiển thị (style) hoặc hành vi của một DOM element/Component/Directive khác. Đấy chính là sự khác biệt giữa chúng.
 
-Câu trả lời cho những câu hỏi trên chính là **NgForOf** trong Angular. (Một số bạn có thể gọi nó là NgFor).
+## CLASS BINDING
 
-**NgForOf** có cách dùng như thế nào, có dùng giống cú pháp của **NgIf** hôm trước không?
+Trong các ứng dụng thực tế, có thể chúng ta cần thay đổi (thêm, xóa) một số class tùy thuộc vào một số điều kiện nào đó.
+Ví dụ, nếu chúng ta đang chọn một tab nào đó để hiển thị, thì tab đó sẽ có thêm class tab-active, các tab khác sẽ không có. Lúc này chúng ta sẽ sử dụng cú pháp:
 
-Giả sử chúng ta có một danh sách các tác giả của các cuốn sách trong một ứng dụng bán sách/thư viện có cấu trúc như sau:
+``` html
+<div [class.tab-active]="isTabActive">
+some content
+</div>
+```
+
+Nhìn qua thì nó chỉ là property binding, với giá trị của isTabActive trả về true thì classList của div đó sẽ tồn tại class tab-active, còn nếu trả về false thì sẽ không tồn tại.
+
+Ngoài cú pháp trên chúng ta có thể dùng: `[class]="classExpr"`
+
+Với classExpr có thể là string, array string hoặc object – nếu key nào của object là truthy thì sẽ thêm vào, nếu falsy thì sẽ xóa đi.
+Ví dụ các dạng của classExpr:
 
 ``` typescript
-authors = [{
-id: 1,
-firstName: 'Flora',
-lastName: 'Twell',
-email: 'ftwell0@phoca.cz',
-gender: 'Female',
-ipAddress: '99.180.237.33'
-}, {
-id: 2,
-firstName: 'Priscella',
-lastName: 'Signe',
-email: 'psigne1@berkeley.edu',
-gender: 'Female',
-ipAddress: '183.243.228.65'
-},
-// more data
-]
+String: "my-class-1 my-class-2 my-class-3"
+Array String: ['foo', 'bar']
+Object: {foo: true, bar: false}
 ```
 
-Dưới đây là ví dụ về cách sử dụng **NgForOf**:
+Tương tự với class binding chúng ta có thể sử dụng ngClass, nhưng hiện tại cũng có thể nói rằng ngClass không có gì khác biệt với `[class]=”classExpr”`. Và cách sử dụng Class Binding vẫn được khuyến cao sử dụng hơn ngClass.
 
-```typescript
-<div *ngFor="let author of authors">
-{{author.id}} - {{author.firstName}} {{author.lastName}}
-</div>
-```
+## STYLE BINDING
 
-Cấu trúc sử dụng này khá giống *for (let author of authors)* trong TypeScript đúng không.
+Có thể khi cần thiết, chúng ta cần binding cho style property (inline style), lúc này chúng ta có thể sử dụng Style binding.
 
-## MỘT SỐ LOCAL VARIABLE TRONG MỘT NGFOROF TEMPLATE
+Cấu trúc của style binding như sau: `[style.property]=”expression”`
 
-Khi sử dụng **NgForOf**, ở mỗi vòng lặp chúng ta sẽ có thể truy xuất đến một số local variable như:
+Với expression sẽ tính toán về các giá trị kiểu `string` | `undefined` | `null`
 
-- `$implicit`: T: Giá trị của phần tử trong danh sách ở lần lặp hiện tại
-- `index`: number: index của lần lặp hiện tại.
-- `count`: number: số lượng phần tử trong danh sách.
-- `first`: boolean: True nếu đây là phần tử đầu tiên trong danh sách.
-- `last`: boolean: True nếu đây là phần tử cuối cùng trong danh sách.
-- `even`: boolean: True nếu đây là phần tử ở index chẵn.
-- `odd`: boolean: True nếu đây là phần tử ở index lẻ.
-  
-Để truy xuất được những biến trên chúng ta chỉ cần gọi chúng như sau:
-
-- Đối với `$implicit` nó sẽ được gắn cho biến mà chính chúng ta khi khai báo *let something of xxx*, lúc này `something = $implicit`.
-- Đối với các biến khác, chúng ta chỉ cần dùng cú pháp sau:
-  
-```typescript
-<div *ngFor="let author of authors; index as idx; count as total">
-({{idx}})/({{total}}): {{author.id}} - {{author.firstName}} {{author.lastName}}
-</div>
-```
-Lúc này biến idx = index, và total = count. Tương tự đối với các biến còn lại.
-
-## CẤU TRÚC NGFOROF VÀ NG-TEMPLATE
-Với cấu trúc dùng dấu sao (*) như trên chúng ta có thể chuyển đổi tương ứng về dạng ng-template và property binding như sau:
+Ví dụ:
 
 ``` html
-<ng-template ngFor [ngForOf]="authors" let-author let-idx="index" let-total="count">
-<div>
-({{idx}})/({{total}}): {{author.id}} - {{author.firstName}} {{author.lastName}}
-</div>
-</ng-template>
+<div [style.width]=”someValue”></div>
 ```
 
-## SỬ DỤNG NHIỀU STRUCUTRE DIRECTIVE TRÊN CÙNG MỘT PHẦN TỬ
+Tiếp theo là cú pháp kèm theo unit: `[style.property.unit]=”expression”`
 
-Trong nhiều trường hợp, bạn có thể cần kiểm tra một dữ liệu nào đó trong vòng lặp, nếu bạn đặt **NgIf** và **NgForOf** trên cùng một phần tử thì nó sẽ không work. Liệu có cách nào khác không?
+Với expression sẽ tính toán về các giá trị kiểu `number` | `undefined` | `null`
 
-Câu trả lời đó là bạn không thể đặt nhiều hơn một structure directive lên một phần tử được. Hãy thử xem ví dụ sau:
+Ví dụ:
+`[style.height.%]=”containerHeight”`
 
-``` typescript
-for (let item of list) {
-if(somethingGood) {
-// more code
-}
-}
-```
+Cuối cùng là cú pháp dạng:
+`[style]=”styleExpr”`
 
-Rõ ràng là chúng ta không đặt for và if vào cùng một hàng được. Vậy nên giải pháp lúc này là tách chúng ra, và sử dụng một tầng wrapper nữa. Ví dụ:
+Với styleExpr là một trong các dạng:
+`String: "width: 100%; height: 100%"`
+`Array String: ['width', '100px']`
+`Object: {[key: string]: string | undefined | null} như {width: '100px', height: '100px'}`
 
-``` html
-<div *ngFor=”let item of list”>
-<div *ngIf=”somethingGoood”>
-More code
-</div>
-</div>
-```
+Có một directive tương tự là **ngStyle** với cách dùng gấn giống thế, trong hầu hết các trường hợp, chúng ta được khuyến cáo sử dụng style binding thay thế.
 
-Giả sử nếu bạn không được phép hoặc không muốn sinh ra một div thừa thì sao? Chúng ta có thể convert **NgIf** về dạng **ng-template** như buổi trước hoặc dùng **ng-container** để dùng:
-
-``` html
-<div *ngFor=”let item of list”>
-<ng-container *ngIf=”somethingGoood”>
-More code
-</ng-container >
-</div>
-<div *ngFor=”let item of list”>
-<ng-template [ngIf]=”somethingGoood”>
-More code
-</ng-template >
-</div>
-```
+Lưu ý rằng, một style property có thể dùng cả kiểu **dash-key** hoặc **camelCase**, ví dụ **font-size** hoặc **fontSize** đều được.
 
 ## SUMMARY
-Trong ngày thứ 5, chúng ta cần hiểu cách dùng cấu trúc **NgForOf** và một số lưu ý khi sử dụng các local variable. Thêm nữa chúng ta cũng cần tìm hiểu cách để sử dụng các cấu trúc lồng nhau với nhiều Structure directive
-Link document các bạn cần tìm hiểu trong Day 5
-- https://angular.io/guide/structural-directives
-- https://angular.io/api/common/NgForOf
-- https://www.tiepphan.com/thu-nghiem-voi-angular-2-built-in-directives-ngif-ngfor-ngswitchcase/
-- https://www.tiepphan.com/thu-nghiem-voi-angular-2-ngfor-index-first-last-even-odd-trackby/
-- https://www.youtube.com/watch?v=dXDC-4KGIGI
+
+Như vậy trong Day 6, chúng ta cần tìm hiểu được cách dùng của 2 built-in **attribute directive** là **class** và **style** để có thể style được một phần tử tùy theo một dữ liệu nào đó trong component.
+
+Dưới đây là các link document mà các bạn cần tìm hiểu:
+
+- https://angular.io/guide/template-syntax#attribute-class-and-style-bindings
+- https://angular.io/api/common/NgClass
+- https://angular.io/api/common/NgStyle
+- https://www.tiepphan.com/thu-nghiem-voi-angular-2-built-in-directives-ngstyle-ngclass/
+
