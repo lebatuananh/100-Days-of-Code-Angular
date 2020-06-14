@@ -1,97 +1,135 @@
-# 100 Days of Code Angular Day 2
+# 100 Days of Code Angular Day 3
 
-## EXPLORE ANGULAR APP
+## ANGULAR DATA BINDING
 
-Từ project được generate bởi Angular CLI chúng ta có thể thấy được trong đó có khá nhiều các file/folder, vậy application của chúng ta bắt đầu từ đâu.
+So, what is data binding? Hãy thử tưởng tượng rằng công ty X có anh nhân viên A, anh này có vợ là chị B, bằng một cách nào đó cứ đến kỳ chuyển lương thì chị B sẽ nhận được thông báo về điện thoại của mình rằng số tiền trong tài khoản của anh A đã được công ty X trả Y triệu. Tương tự như thế trong lập trình khi chúng ta có data D thuộc object O sẽ được ràng buộc với data G thuộc object OP, bằng một cách nào đó, mỗi khi data D thay đổi thì G cũng sẽ biết sự thay đổi và thay đổi theo. Đó là một dạng của data binding.
 
-Đầu tiên, từ folder src bạn có thể thấy được file index.html, bên trong tag body sẽ có một tag HTML khá khác lạ (app-root trong hầu hết trường hợp). Tag này không hề tồn tại trong HTML, ắt hẳn đây là một custom tag/selector của application, hay nói cách khác, đây là cái gì đó bao ngoài của một view nào đó trong ứng dụng.
+Trong Angular chúng ta đã được Angular làm nhiệm vụ đồng bộ những dữ liệu bị ràng buộc lại với nhau, chúng ta chỉ cần update data/state cần thiết.
 
-Tiếp theo, bạn mở file **main.ts**, đây là nơi khởi đầu của application, bên trong là các đoạn code TypeScript (TS) thông thường, nó là một module (ES module/TS module), nó đã import một số thứ khác từ một số thư viện/module khác để sử dụng. Không có gì đặc biệt lắm trong file này, nó chỉ gọi đến một số hàm nào đó để thực thi việc bootstrap application.
-Và sau một vài chỉ dẫn bạn đã có thể tìm thấy file **app/app.module.ts**, đây là một file TypeScript module khác, bên trong có một class kèm theo cái móc móc gì đó NgModule (một TS decorator), đó chính là một NgModule ở trong một ứng dụng Angular. Đến đây có thể thấy đã bắt đầu confuse, gì mà TS module rồi lại còn NgModule. Thực ra bạn có thể hiểu đơn giản đó là TS module là cách mà chúng ta tổ chức code thành các phần nhỏ có thể là các file, các folder, mỗi một file TS sẽ đóng gói thành một module, nó có thể import module khác, hoặc export một số phần code trong nó cho module khác sử dụng. Còn NgModule là cách mà chúng ta tổ chức phần chức năng của một Angular application. Mỗi Angular app sẽ được chia thành nhiều NgModule, ít nhất đến thời điểm hiện tại thì app của chúng ta mới có một NgModule tên là AppModule (hay được gọi là root NgModule). Trong tương lai NgModule có thể không còn cần thiết cho ứng dụng nữa.
+Vậy có những dạng data binding nào?
 
-Ở trong AppModule, chúng ta đã thấy được một trong những thành phần quan trọng nhất của các ứng dụng Angular đó là các Component, ở đây là AppComponent, nó được import từ file **app.component.ts**.
+## INTERPOLATION
 
-Với mỗi một ứng dụng Angular, một component sẽ định nghĩa ra một view tương ứng. Hãy thử tưởng tượng bạn là một người kiến trúc lên các tòa nhà cao tầng, việc chúng ta ghép các Component (có sẵn hoặc phải tự tạo) để tạo ra tòa nhà đó cũng giống như việc chúng ta xây dựng các ứng dụng dựa trên Component (Angular, React đều dựa trên ý tưởng chia ứng dụng thành các component và integrate chúng lại với nhau). Ví dụ, trong ứng dụng của chúng ta có thể có các component như: Main Page, Header, Side Nav, Footer. Và bên trong mỗi component lại có thể là sự hợp thành của nhiều component khác nữa.
+Bây giờ hãy nhớ lại, một component trong Angular chỉ là một TypeScript (TS) class thông thường, và nó đi kèm với một decorator để găn thêm meta-data như template mà nó định nghĩa là gì. Như vậy, TS class và template này hoàn toàn không biết đến nhau, mà nó sẽ được Angular xử lý để gắn chúng lại. Câu hỏi đặt ra là làm thế nào để tôi hiển thị một dữ liệu nào đó (tên, tuổi, ngày tháng năm sinh, một string, number bất kỳ, hay bất kỳ thứ gì (object) có thể hiển thị được? Đây chính là nơi tỏa sáng của cặp đôi hoàn cảnh (mà chúng ta gọi là interpolation) `{{ expression }}`.
 
-Đối với AppComponent, đây là root component của ứng dụng, bạn có thể lại thấy một TS decorator khác nữa tên là Component, và bên dưới là một TS class thông thường.
-Ở trong ứng dụng Angular, TS decorator mà Angular cung cấp thông thường sẽ để gắn thêm meta-data cho class/property/method, đối với class AppComponent, decorator Component sẽ gắn thêm một số meta-data như selector, template (view của component, chính là chúng ta sẽ định nghĩa component sẽ hiển thị những gì), etc...
+Nó có thể hiểu là hãy tính toán cái expression này, nếu có trả về cái gì thì phun (display) nó ra ngay vị trí chỗ dấu `{{}}` này cho tôi.
 
-View của một component có thể coi là phần HTML mở rộng, nó có nhiều tính năng hơn HTML thông thường. Ở trong view chúng ta có thể sẽ nhúng các component/directive khác.
-Vậy là đã rõ, tag app-root mà chúng ta nhìn thấy từ index.html sau một vòng tìm hiểu chúng ta sẽ tìm ra nó thuộc về AppComponent.
+Chỉ đơn giản thế. Giờ các bạn có thể phun data về tên tuổi của một người thành cái profile đơn giản như sau:
 
-## KHỞI TẠO THÊM MỘT COMPONENT MỚI
-
-Một Angular application sẽ được tạo từ nhiều component, nên chúng ta sẽ không để hết code vào AppComponent, bây giờ hãy làm thử một component khác xem sao.
-Chúng ta sẽ tạo mới file **hello.component.ts** cùng trong thư mục của **app.component.ts** và thực hiện coding.
-
-```typescript
-export class HelloComponent {}
-```
-
-Nó là một TS class rất đơn giản phải không, bây giờ chúng ta sẽ gắn meta-data cho nó như sau.
-
-```typescript
+``` typescript
 import { Component } from '@angular/core';
 @Component({
 selector: 'app-hello',
 template: `
 <h2>Hello there!</h2>
+<h3>Your name: {{ user.name }}</h3>
+<p>Your name: {{ user.age }}</p>
 `
 })
-export class HelloComponent {}
+export class HelloComponent {
+user= {
+name: 'Le Ba Tuan Anh',
+age: 24
+};
+}
 ```
 
-Thế là đã xong một component đó, easy. Với selector trên nếu chúng ta sử dụng như AppComponent thì có được không.
+## PROPERTY BINDING
 
-Bây giờ bạn mở file **app.component.html** lên và chèn thêm selector của HelloComponent vừa tạo xem sao.
+Một số tag khi sử dụng bạn cần phải truyền vào data cho một property nào đó. Đối với DOM chúng ta có 2 khái niệm khác nhau là property và attribute. À mà khoan DOM là gì? Khi browser load trang web của bạn, nó sẽ parse phần HTML và xây dựng nên một cây Document Object Model (DOM) từ đó để biểu diễn tương ứng những gì HTML đang được dựng, cho phép chúng ta có thể tương tác với phần HTML như đọc, sửa HTML bằng JavaScript.
 
-```typescript
-<app-hello></app-hello>
+Giả sử khi bạn có phần HTML:
+
+```html
+<input type=”text” value=”something”>
 ```
 
-Save file và khởi chạy ứng dụng với lệnh `ng serve` như day 1 xem sao.
+Sau khi parse xong sẽ có một object (node) thuộc type HTMLInputElement được tạo ra. Ở đây `type=”text”` hay `value=”something”` là các HTML attribute. Mỗi tag HTML có thể có nhiều attribute khác nữa (xin mời bạn Search Google). Object được tạo tương ứng sẽ có dạng
 
-Không được rồi, chúng ta đã gặp lỗi.
-
-```none
-error NG8001: 'app-hello' is not a known element:
-1. If 'app-hello' is an Angular component, then verify that it is part of this module.
-2. If 'app-hello' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+``` typescript
+obj = {
+type: ‘text’,
+value: ‘something’,
+attributes: [] // thuộc type NamedNodeMap, dạng như một array
+// … các thuộc tính, method khác
+}
 ```
 
-Rõ ràng rồi, chúng ta nhìn thấy lỗi cũng đã gợi ý cho chúng ta cách fix. Chúng ta mới chỉ tạo ra component mà chưa declare nó sẽ thuộc NgModule nào cả, giống như khi bạn gia nhập một công ty mới, ngày đầu tiên bạn chưa biết mình thuộc ai quản lý, lúc này có thể bạn sẽ không thể vào văn phòng vì không ai biết bạn là ai cả. Vì vậy chúng ta cần làm các bước để khai sinh cho component vừa mới được sinh ra.
+Như bạn có thể thấy attribute được để chỉ những gì các bạn đặt vào phần opening tag của một tag sẽ là attributes, còn những gì là property của object (node) sẽ được gọi là property.
 
-Trong app hiện tại có NgModule duy nhất là AppModule, chúng ta sẽ thêm vào đó, nhưng vấn đề là thêm vào đâu?
+Các attributes sẽ được lưu trữ vào property attributes của node tương ứng.
 
-Khi bạn mở AppModule sẽ thấy AppComponent được đưa vào NgModule decorator, chắc là component mới kia cũng thế. Và một thoáng nhìn, chúng ta thấy cái keyword khá dễ mường tượng declarations, sau khi hover vào chúng ta sẽ thấy editor sẽ hiển thị một message:
+Có những attribute sẽ được map sang thành property tương ứng, ví dụ như type và value ở trên, nhưng có những attribute không được map sang ví dụ class sẽ thành className, chúng không có quan hệ 1-1 với nhau.
 
-```none
-- The set of components, directives, and pipes (declarables) that belong to this module.
-- @usageNotes — The set of selectors that are available to a template include those declared here, and those that are exported from imported NgModules.
-- Declarables must belong to exactly one module. The compiler emits an error if you try to declare the same class in more than one module. Be careful not to declare a class that is imported from another module.
+Thực tế khi sử dụng Angular, chúng ta sẽ muốn ứng dụng trở nên linh động hơn (ví dụ: cùng là 1 template nhưng có thể thay đổi data để hiển thị). Lúc này chúng ta cần update các properties của DOM để làm cho nó đáp ứng chẳng hạn. Nhưng nếu cần phải dùng document.querySelector/jQuery để manipulate DOM thì Angular quá vô vị. Phải có cách gì đó hay ho hơn chứ nhỉ?
+
+Đó chính là đất diễn của property binding. Chúng ta chỉ cần sử dụng một cú pháp để báo cho Angular biết chúng ta cần binding một property như sau ở template.
+
+``` html
+<input type="text" [value]="user.name" >
 ```
 
-Yeah, chính là nó đó, giờ chỉ việc thêm HelloComponent vào đó là xong.
+Trong dự án Angular, bạn hoàn toàn có thể hiểu `type="text"` lúc này cũng là một property binding, thay vì `[type]="'text'"` (để ý có 1 cặp nháy đơn và 1 cặp nhảy đôi), nó đang biểu diễn binding cho một hằng giá trị (literal), lúc này bạn hoàn toàn có thể bỏ qua mấy dấu vuông vuông kia đi. Nhưng trong hầu hết các trường hợp còn lại, bạn sẽ dùng dấu vuông vuông `[property]="expression"` để thực hiện khai báo property binding.
 
-```typescript
-declarations: [
-AppComponent,
-HelloComponent,
-],
+Trong ví dụ ở trên chúng ta đã binding từ TS class ra ngoài template, và khi dữ liệu ở class thay đổi, Angular sẽ tự động làm nhiệm vụ update template để hiển thị tương ứng sự thay đổi đó cho chúng ta.
+
+``` none
+Lưu ý: ngoài property binding cho các phần tử HTML, chúng ta cũng có thể áp dụng property binding cho
+các component.
 ```
 
-App đã chạy thành công, bây giờ nhìn kỹ lại thì việc để tạo được một component cũng không quá khó. Ngoài ra, declarations array có thể dùng cho cả component, pipe, directive (chắc là cái concept gì đó nữa ở trong Angular).
-Ngoài cách tạo component bằng tay như trên, bạn có thể tạo bằng Angular CLI như sau:
-`ng generate component hello`
+## EVENT BINDING
+JavaScript sử dụng rất nhiều đến khái niệm event. Khi một điều gì đó xảy ra, chúng ta muốn thực hiện một số task nào đó. Ví dụ, khi người dùng click vào button, tôi muốn hiển thị alert cho người dùng nhìn thấy.
 
-Với cách tạo bằng tool thì bạn sẽ không cần phải làm những giai đoạn bằng tay lặp đi lặp lại nữa.
+Angular có cách nào chính thống cho việc này không đây, hay chúng ta sẽ dùng addEventListener như thường?
 
-That's all for today.
+Câu trả lời chính là Event binding. Để gắn event listener vào một phần tử nào đó ở trên template, chúng ta có thể sử dụng cú pháp ngoặc tròn tròn như sau:
 
-Các bạn hãy thử tìm hiểu cấu trúc ứng dụng và tạo thêm nhiều component nữa nào.
+``` typescript
+@Component({
+selector: 'app-hello',
+template: `
+<h2>Hello there!</h2>
+<button (click)="showInfo()">Click me!</button>
+`
+})
+export class HelloComponent {
+showInfo() {
+alert('Inside Angular Component method');
+}
+}
+```
+
+Chỉ là lúc này chúng ta sẽ trỏ đến method bên trong Component. Khá là giống như chúng ta sử dụng inline event listener đó.
+
+```html
+<button onclick="showInfo()">Click me!</button>
+```
+
+## TWO-WAY BINDING
+
+Trong thực tế two-way binding chính là kết hợp của binding dữ liệu từ class ra template thông qua property binding, và từ template vào class thông qua event binding.
+
+Nó chứa cú pháp ngắn gọn dạng vuông vuông tròn tròn như sau:
+
+``` html
+<input type="text" [(ngModel)]="user.name" >
+```
+
+Để sử dụng ngModel bạn cần imports FormsModule, nhưng trong bài này chúng ta chỉ cần hiểu, nó là cách viết tắt của dạng tương ứng là:
+
+``` html
+<input type="text" [ngModel]="user.name" (ngModelChange)="user.name = $event">
+```
+
+Trong một buổi khác chúng ta sẽ tìm hiểu về Two-way binding và Custom Two-way binding sau.
 
 ## SUMMARY
 
-- https://angular.io/guide/architecture
-- https://angular.io/guide/architecture-modules
-- https://angular.io/guide/architecture-components
+Trong ngày thứ 3 này, chúng ta chỉ cần nắm được có các loại data binding nào trong Angular, làm thế nào để sử dụng chúng là được.
+
+Từ bây giờ các bạn có thể hoàn toàn tạo được một cái profile card theo phong cách của mình bằng Angular rồi.
+https://www.w3schools.com/howto/howto_css_profile_card.asp
+Link document các bạn cần tìm hiểu trong Day 3
+https://angular.io/guide/architecture-components#data-binding
+
