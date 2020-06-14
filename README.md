@@ -6,7 +6,7 @@ Sẽ ra sao nếu trong ứng dụng bạn cần phải hiển thị một danh 
 
 Câu trả lời cho những câu hỏi trên chính là **NgForOf** trong Angular. (Một số bạn có thể gọi nó là NgFor).
 
-**NgForOf** có cách dùng như thế nào, có dùng giống cú pháp của NgIf hôm trước không?
+**NgForOf** có cách dùng như thế nào, có dùng giống cú pháp của **NgIf** hôm trước không?
 
 Giả sử chúng ta có một danh sách các tác giả của các cuốn sách trong một ứng dụng bán sách/thư viện có cấu trúc như sau:
 
